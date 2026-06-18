@@ -28,27 +28,42 @@ const resultadoResumo = document.getElementById('resultadoResumo');
 // O array abaixo será usado nas próximas etapas.
 let mensagens = [];
 let totalMensagens = 0;
-// ETAPA 1
-// Crie uma função para enviar uma mensagem digitada no textarea.
-function enviarMensagem() {
-    // TODO: ler o texto digitado
-    // TODO: validar se está vazio
-    // TODO: criar a mensagem na tela
 
+// ETAPA 2
+// Use o valor do select para mudar o tipo da mensagem: aluno, bot ou sistema.
+
+function enviarMensagem() {
+    
+    const autor = autorMensagem.value; 
     const texto = textoMensagem.value.trim();
     if(texto === '') {
         statusChat.textContent = 'Digite uma mensagem antes de enviar.';
         return;
     }
 
-    listaMensagens.innerHTML = '';
+    let classe = 'message--sistema';
+    let nomeAutor = 'Sistema';
+            
+    if(autor === 'aluno'){
+        classe = 'message--aluno';
+        nomeAutor = 'aluno';
+    }else if (autor === 'bot'){
+        classe = 'message--bot'
+        nomeAutor = 'Bot';
+    }
+
+    if (totalMensagens === 0){
+        listaMensagens.innerHTML = '';
+    }
+
+   
 
     const caixa = document.createElement('div');
-    caixa.className = 'message message--aluno';
+    caixa.className = 'message ' + classe;
 
     const meta = document.createElement('span');
     meta.className = 'mensage_meta';
-    meta.textContent = 'Aluno';
+    meta.textContent = nomeAutor;
 
     const paragrafo = document.createElement('p');
     paragrafo.textContent = texto;
@@ -56,7 +71,8 @@ function enviarMensagem() {
     caixa.appendChild(meta);
     caixa.appendChild(paragrafo);
     listaMensagens.appendChild(caixa);
-    statusChat.textContent = '1 mensagem enviada.'
+    totalMensagens++;
+    statusChat.textContent = totalMensagens + ' mensagem(ns) enviada(s) no chat.'
     textoMensagem.value = '';
 
 
@@ -66,76 +82,8 @@ function enviarMensagem() {
     console.log();
 }
 
-function limparTexto(texto) {
-    return texto.trim();
-}
-
-function autorValido(autor){
-    return autor === 'aluno' || autor === 'bot' || autor === 'sistema';
-}
-
-function nomeDoAutor(autor) {
-    if(autor === 'aluno') {
-        return 'Aluno';
-    }
-    
-    if(autor === 'bot') {
-        return 'Bot';
-    }
-    return 'Sistema';
-    
-}
-
-function criarMensagem(autor, texto) {
-    if(!autorValido(autor)) {
-        autor = 'Sistema';
-    }
-    return {
-        autor: autor,
-        texto: texto,
-        hora: new Date().toLocaleTimeString('pt-br', { hour: '2-digit', minute: '2-digit' })
-    };
-}
-
-function renderizarMensagem(mensagem){
-
-    const caixa = document.createElement('div');
-    caixa.className = 'message message--' + mensagem.autor;
-
-    const meta = document.createElement('span');
-    meta.className = 'mensage_meta';
-    meta.textContent = nomeDoAutor(mensagem.autor) + ' • ' + mensagem.hora;
-
-    const paragrafo = document.createElement('p');
-    paragrafo.textContent = mensagem.texto;
-
-    caixa.appendChild(meta);
-    caixa.appendChild(paragrafo);
-    listaMensagens.appendChild(caixa);
-
-}
-
 // ETAPA 3
 // Separe o programa em funções menores.
-function enviarMensagem() {
-    
-    const autor = autorMensagem.value; 
-    const texto = limparTexto(textoMensagem.value);
-    
-    if(texto === '') {
-        statusChat.textContent = 'Digite uma mensagem antes de enviar.';
-        return;
-    }   
-
-    const mensagem = criarMensagem(autor, texto);
-    renderizarMensagem(mensagem);
-        
-    totalMensagens++;
-    statusChat.textContent = totalMensagens + ' mensagem(ns) enviada(s) no chat.'
-    textoMensagem.value = '';
-}
-
-
 
 
 
